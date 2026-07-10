@@ -123,7 +123,7 @@ passport.deserializeUser(async function (id: string, done) {
             return done(null, false);
         }
 
-        user.password = "__REMOVED__";
+        user.password = "__REMOVED_FOR_SECURITY__";
         done(null, user);
     } catch (error) {
         done(error, false);

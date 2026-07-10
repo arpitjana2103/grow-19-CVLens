@@ -8,6 +8,8 @@ import {
     logoutUser,
     registerUser,
 } from "../controllers/auth.controller.js";
+import { getMe } from "../controllers/user.controller.js";
+import { authProtect } from "../middlewares/auth.middleware.js";
 
 const authRoutes = Router();
 
@@ -36,5 +38,7 @@ authRoutes.route("/login").post(
 );
 
 authRoutes.route("/logout").post(logoutUser);
+
+authRoutes.route("/me").get(authProtect, getMe);
 
 export default authRoutes;
