@@ -28,8 +28,8 @@ export function useLoginMutation() {
 
     return useMutation({
         mutationFn: login,
-        onSuccess: function () {
-            queryClient.invalidateQueries({
+        onSuccess: async function () {
+            await queryClient.invalidateQueries({
                 queryKey: ["user"],
             });
         },
