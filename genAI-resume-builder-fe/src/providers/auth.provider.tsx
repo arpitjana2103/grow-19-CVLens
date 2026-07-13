@@ -1,6 +1,7 @@
 import type { TUser } from "@/features/auth/schemas/auth.schema";
 
-import { createContext, useContext, useMemo } from "react";
+import { createContext, useContext, useEffect, useMemo } from "react";
+import toast from "react-hot-toast";
 
 import { useUserQuery } from "@/features/auth/queries/auth.query";
 
@@ -19,11 +20,28 @@ type AuthProviderProps = {
 export const AuthProvider = function ({ children }: AuthProviderProps) {
     const query = useUserQuery();
 
+    useEffect(() => {
+        const TOAST_ID = "auth-toast-provider";
+
+        if (query.isLoading || query.isFetching) {
+            toast.loading("Authenticating...", { id: TOAST_ID });
+        } else if (query.isSuccess) {
+            if (query.data !== null) {
+                const username = query.data?.username;
+                toast.success(`Welcome ${username}`, { id: TOAST_ID });
+            } else {
+                toast.dismiss(TOAST_ID);
+            }
+        } else if (query.isError) {
+            toast.error("Failed to get logged in user.", { id: TOAST_ID });
+        }
+    }, [query.isLoading, query.isSuccess, query.isError, query.isFetching]);
+
     const value = useMemo(
         () => ({
             user: query.data ?? null,
             isAuthenticated: !!query.data,
-            isLoading: query.isLoading,
+            isLoading: query.isLoading || query.isFetching,
         }),
         [query.data, query.isLoading],
     );

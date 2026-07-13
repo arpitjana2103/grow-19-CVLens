@@ -23,3 +23,17 @@ export const authProtect = handleAsyncError(async function (
         });
     }
 });
+
+export const NoAuth = handleAsyncError(async function (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) {
+    if (req.isAuthenticated() && req.user) {
+        throw new AppError({
+            publicMessage: "Authenticated user can't perform this actions",
+            statusCode: HTTPSTATUSCODE.BAD_REQUEST,
+            errorCode: ErrorCodeEnum.ACCESS_FORBIDDEN,
+        });
+    } else next();
+});

@@ -1,6 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import toast from "react-hot-toast";
 
 import { getUser, login, logout, register } from "../services/auth.service";
+
+const TOAST_ID = "auth-toast-query";
 
 export function useUserQuery() {
     return useQuery({
@@ -14,11 +18,25 @@ export function useRegisterMutation() {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: register,
-        onSuccess: function () {},
+        onMutate: function () {
+            toast.loading("Registering user...", { id: TOAST_ID });
+        },
+        onSuccess: async function () {
+            await queryClient.invalidateQueries({
+                queryKey: ["user"],
+            });
+            toast.success("Registration successful", { id: TOAST_ID });
+        },
         onError: function (error) {
-            console.log("Error from : useRegisterMutation");
-            console.log(error);
-            queryClient.setQueryData(["user"], null);
+            if (error instanceof AxiosError) {
+                const errorData = error.response?.data;
+                console.log(errorData);
+                toast.error(errorData.message, { id: TOAST_ID });
+            } else {
+                console.log("Error from : useRegisterMutation");
+                console.log(error);
+                toast.error("Registration failed", { id: TOAST_ID });
+            }
         },
     });
 }
@@ -28,16 +46,26 @@ export function useLoginMutation() {
 
     return useMutation({
         mutationFn: login,
+        onMutate: function () {
+            toast.loading("Logging in...", { id: TOAST_ID });
+        },
         onSuccess: async function () {
             await queryClient.invalidateQueries({
                 queryKey: ["user"],
             });
+            toast.success("Login successful", { id: TOAST_ID });
         },
 
         onError: function (error) {
             console.log("Error from : useLoginMutation");
-            console.log(error);
-            queryClient.setQueryData(["user"], null);
+            if (error instanceof AxiosError) {
+                const errorData = error.response?.data;
+                console.log(errorData);
+                toast.error(errorData.message, { id: TOAST_ID });
+            } else {
+                console.log(error);
+                toast.error("Login failed", { id: TOAST_ID });
+            }
         },
     });
 }
@@ -47,27 +75,25 @@ export function useLogoutMutation() {
 
     return useMutation({
         mutationFn: logout,
-        onSuccess: function () {
-            queryClient.setQueryData(["me"], null);
+        onMutate: function () {
+            toast.loading("Logging out...", { id: TOAST_ID });
+        },
+        onSuccess: async function () {
+            await queryClient.invalidateQueries({
+                queryKey: ["user"],
+            });
+            toast.success("Logout successful", { id: TOAST_ID });
         },
         onError: function (error) {
-            console.log("Error from : useLogoutMutation");
-            console.log(error);
+            if (error instanceof AxiosError) {
+                const errorData = error.response?.data;
+                console.log(errorData);
+                toast.error(errorData.message, { id: TOAST_ID });
+            } else {
+                console.log("Error from : useLogoutMutation");
+                console.log(error);
+                toast.error("Logout failed", { id: TOAST_ID });
+            }
         },
     });
 }
-
-/*
-onError: function (error) {
-    if (error instanceof AxiosError) {
-        // This is where your backend's JSON payload lives!
-        const backendErrorPayload = error.response?.data;
-
-        console.log(backendErrorPayload.message); // "Invalid email or password"
-        console.log(backendErrorPayload.errorCode); // "AUTH_NOT_FOUND"
-
-        // Show this message to the user in a Toast notification
-    }
-}
-
-*/

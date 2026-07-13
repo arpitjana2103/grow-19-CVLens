@@ -46,16 +46,19 @@ export const registerUser = handleAsyncError(async function (
         provider: "EMAIL",
     });
 
-    sendResponse(res, {
-        statusCode: HTTPSTATUSCODE.OK,
-        status: "success",
-        message: "User registered successfully",
-        data: {
-            user: {
-                name: newUser.username,
-                email: newUser.email,
+    req.login(newUser, function (err) {
+        if (err) throw err;
+        sendResponse(res, {
+            statusCode: HTTPSTATUSCODE.OK,
+            status: "success",
+            message: "User registered successfully",
+            data: {
+                user: {
+                    name: newUser.username,
+                    email: newUser.email,
+                },
             },
-        },
+        });
     });
 });
 

@@ -11,13 +11,18 @@ const BASE_URL = `http://localhost:8000`;
 const axiosClient = axiosCreateInstance({ baseURL: BASE_URL, withCredentials: true });
 
 export async function getUser() {
-    const res = await axiosClient.get("/api/auth/me");
+    try {
+        const res = await axiosClient.get("/api/auth/me");
 
-    const response = getMeResponseSchema.parse(res.data);
+        const response = getMeResponseSchema.parse(res.data);
 
-    if (response.success && response.data) {
-        return response.data.user;
-    } else {
+        if (response.success && response.data) {
+            return response.data.user;
+        } else {
+            return null;
+        }
+    } catch (err) {
+        console.log(err);
         return null;
     }
 }

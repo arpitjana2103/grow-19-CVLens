@@ -5,6 +5,7 @@ import type { Request, Response, NextFunction } from "express";
 import type { StringValue as msStringValue } from "ms";
 
 import { RedisStore } from "connect-redis";
+import cors from "cors";
 import express from "express";
 import session from "express-session";
 import ms from "ms";
@@ -34,6 +35,22 @@ app.use(express.json({ limit: "10mb" }));
 app.set("query parser", function (queryString: string) {
     return qs.parse(queryString);
 });
+
+// Middleware: Configures CORS policy
+// - Allows origin: https://myapp.com
+// - Permits methods: GET, POST, PUT, DELETE
+// - Allows headers: Content-Type, Authorization
+// - Enables credentials (cookies, auth headers)
+// - Preflight cache duration: 24h (maxAge in seconds)
+app.use(
+    cors({
+        origin: config.FRONTEND_ORIGIN,
+        methods: ["GET", "POST", "PUT", "DELETE"],
+        allowedHeaders: ["Content-Type", "Authorization"],
+        credentials: true,
+        maxAge: ms("24h") / 1000,
+    }),
+);
 
 const redisClient = createClient({
     url: config.REDIS_URI,
