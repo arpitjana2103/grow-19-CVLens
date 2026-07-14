@@ -8,7 +8,7 @@ export default function AppLayout() {
         <div className="flex min-h-screen flex-col">
             <NavBar />
             <main className="flex grow flex-col">
-                <Container className="flex grow flex-col">
+                <Container className="grow overflow-auto pb-20">
                     <Outlet />
                 </Container>
             </main>

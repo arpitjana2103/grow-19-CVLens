@@ -15,7 +15,7 @@ export default function NavBar({ className }: { className?: string }) {
     return (
         <header className={cn("w-screen", className)}>
             <Container>
-                <div className="flex items-center justify-between py-6">
+                <div className="flex items-center justify-between py-4 md:py-6">
                     <div>
                         <Link to="/">
                             <Logo />
@@ -24,12 +24,12 @@ export default function NavBar({ className }: { className?: string }) {
 
                     <div className="flex gap-2">
                         {!isAuthenticated && isHomeRoute && (
-                            <MyButton type="holo" onClick={() => navigate("/login")}>
+                            <MyButton varient="holo" onClick={() => navigate("/login")}>
                                 Login
                             </MyButton>
                         )}
                         {isHomeRoute && (
-                            <MyButton type="filled" onClick={() => navigate("/app")}>
+                            <MyButton varient="filled" onClick={() => navigate("/app")}>
                                 Get Started
                             </MyButton>
                         )}

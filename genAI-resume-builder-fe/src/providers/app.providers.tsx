@@ -11,14 +11,14 @@ export function AppProviders({ children }: AppProvidersProps) {
     return (
         <>
             <Toaster
-                position="bottom-center"
+                position="bottom-left"
                 toastOptions={{
                     duration: 5000,
                     style: {
                         background: "#324561",
                         color: "#f0fdf4",
                         fontSize: "0.9rem",
-                        borderRadius: "0.3rem",
+                        borderRadius: "0rem",
                         lineHeight: "1.2rem",
                     },
                 }}

@@ -2,26 +2,23 @@ import { cn } from "@/lib/utils";
 
 import { Button } from "../ui/button";
 
-type MyButtonProps = {
-    children: React.ReactNode;
-    className?: string;
-    type: "holo" | "filled";
-    onClick?: () => void;
+type MyButtonProps = React.ComponentProps<typeof Button> & {
+    varient: "holo" | "filled";
 };
 
-export default function MyButton({ children, className, type, onClick }: MyButtonProps) {
-    const btnTypes = {
+export default function MyButton({ children, className, varient, ...props }: MyButtonProps) {
+    const btnVarients = {
         holo: "bg-transparent text-foreground",
-        filled: "bg-foreground text-background hover:bg-foreground  hover:text-primary",
+        filled: "bg-foreground text-white hover:bg-foreground hover:bg-foreground/95 hover:border-border/95",
     };
     return (
         <Button
-            onClick={onClick}
             className={cn(
                 "cursor-pointer rounded-sm border-2 border-border",
+                btnVarients[varient],
                 className,
-                btnTypes[type],
             )}
+            {...props}
         >
             {children}
         </Button>

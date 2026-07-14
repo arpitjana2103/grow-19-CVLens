@@ -1,15 +1,22 @@
 :root {
     --greenColor: #6BE3A2;
     --greenColorDark: #60cc92;
-    --darkNevy: #324561;
+
+
+    --slate700: #314158;
+    --slate400: #90a1b9;
+
     --green50: #f0fdf4;
     --green100: #dcfce7;
 
     --primary: var(--greenColor);
     --primaryDark: var(--greenColorDark);
-    --foreground: var(--darkNevy);
-    --background: var(--green50);
+    --foreground: var(--slate700);
+    --background: var(--green100);
     --border: var(--foreground);
+    --ring: var(--primary);
+    --muted-foreground: var(--slate400);
+    --input: var(--slate400);
 
     --card: oklch(1 0 0);
     --card-foreground: oklch(0.145 0 0);
@@ -19,12 +26,9 @@
     --secondary: oklch(0.97 0 0);
     --secondary-foreground: oklch(0.205 0 0);
     --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
     --accent: oklch(0.97 0 0);
     --accent-foreground: oklch(0.205 0 0);
     --destructive: oklch(0.577 0.245 27.325);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
     --chart-1: oklch(0.87 0 0);
     --chart-2: oklch(0.556 0 0);
     --chart-3: oklch(0.439 0 0);

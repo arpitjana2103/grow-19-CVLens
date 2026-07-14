@@ -23,10 +23,15 @@
     }
 
     body {
-        @apply bg-background text-foreground min-h-screen;
+        @apply bg-background text-foreground min-h-screen font-des;
     }
 
     html {
-        @apply font-des;
+        @apply text-[14px] xs:text-[16px] scroll-smooth;
+        scrollbar-color: rgba(2, 6, 24, 0.2) transparent;
+    }
+
+    html.dark {
+        scrollbar-color: rgba(2, 6, 24, 0.2) transparent;
     }
 }
