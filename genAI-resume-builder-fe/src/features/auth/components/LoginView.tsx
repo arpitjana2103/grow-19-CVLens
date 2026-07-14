@@ -1,12 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { GoogleIcon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { Link, useSearchParams } from "react-router";
 
 import MyButton from "@/components/shared/MyButton";
+import Spinner from "@/components/shared/Spinner";
 import { Field, FieldDescription, FieldGroup } from "@/components/ui/field";
 import {
     InputGroup,
@@ -16,12 +15,8 @@ import {
 } from "@/components/ui/input-group";
 
 import { useLoginMutation } from "../queries/auth.query";
-import { LoginFormSchema, type LoginFormData } from "../schemas/auth.schema";
-
-type LoginFormValues = {
-    email: string;
-    password: string;
-};
+import { LoginFormSchema, type TLoginFormData } from "../schemas/auth.schema";
+import GoogleBtn from "./GoogleBtn";
 
 const BE_ORIGIN = import.meta.env.VITE_BACKEND_ORIGIN;
 
@@ -30,7 +25,7 @@ export default function LoginView() {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<LoginFormData>({
+    } = useForm<TLoginFormData>({
         resolver: zodResolver(LoginFormSchema),
     });
     const loginMutation = useLoginMutation();
@@ -46,7 +41,7 @@ export default function LoginView() {
         }
     }, [searchParams, setSearchParams]);
 
-    const onSubmit = async function (data: LoginFormValues) {
+    const onSubmit = async function (data: TLoginFormData) {
         await loginMutation.mutateAsync({
             email: data.email,
             password: data.password,
@@ -56,20 +51,7 @@ export default function LoginView() {
     return (
         <div className="mx-auto mt-14 w-full max-w-100 bg-white p-8 ring-6 ring-primary/80">
             <h3 className="mb-8 text-center text-3xl font-semibold">Login</h3>
-            <a href={`${BE_ORIGIN}/api/auth/google`} className="mb-8 inline-block w-full">
-                <MyButton className="relative h-10 w-full bg-primary" varient="holo">
-                    <span className="absolute top-1/2 left-2 -translate-y-1/2 transform">
-                        <HugeiconsIcon
-                            icon={GoogleIcon}
-                            color="currentColor"
-                            fill="white"
-                            strokeWidth={2}
-                            className="size-6"
-                        />
-                    </span>
-                    <span className="font-semibold">Continue with Google</span>
-                </MyButton>
-            </a>
+            <GoogleBtn href={`${BE_ORIGIN}/api/auth/google`} />
             <form noValidate onSubmit={handleSubmit(onSubmit)}>
                 <FieldGroup>
                     <Field>
@@ -96,7 +78,7 @@ export default function LoginView() {
                             <InputGroupInput
                                 type="password"
                                 autoComplete="current-password"
-                                placeholder="At least 8 characters"
+                                placeholder="YourPassword"
                                 {...register("password")}
                             />
                             <InputGroupAddon align="block-start">
@@ -113,18 +95,18 @@ export default function LoginView() {
                     </Field>
                 </FieldGroup>
                 <MyButton
-                    className="mt-4 h-10 w-full"
+                    className="mt-4 flex h-10 w-full items-center"
                     varient="filled"
                     type="submit"
                     disabled={loginMutation.isPending}
                 >
-                    Login
+                    <span>{loginMutation.isPending && <Spinner />}</span>
+                    <span>{!loginMutation.isPending ? "Login" : "Logging in ..."}</span>
                 </MyButton>
             </form>
             <p className="mt-3 text-center text-sm transition-colors hover:text-foreground/80">
                 Don't have an account ?{" "}
                 <Link className="font-semibold" to="/register">
-                    {" "}
                     Sign up
                 </Link>
             </p>

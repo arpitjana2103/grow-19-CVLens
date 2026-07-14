@@ -61,4 +61,24 @@ export const LoginFormSchema = z.object({
     email: z.email("Please enter a valid email address"),
     password: z.string().min(8, "Password must be at least 8 characters"),
 });
-export type LoginFormData = z.infer<typeof LoginFormSchema>;
+export type TLoginFormData = z.infer<typeof LoginFormSchema>;
+
+export const RegisterFormSchema = z
+    .object({
+        username: z
+            .string()
+            .trim()
+            .min(3, "Username must be at least 3 characters")
+            .max(30, "Username must be at most 30 characters"),
+
+        email: z.email("Please enter a valid email address"),
+
+        password: z.string().min(8, "Password must be at least 8 characters"),
+
+        confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+        message: "Passwords do not match",
+        path: ["confirmPassword"],
+    });
+export type TRegisterFormData = z.infer<typeof RegisterFormSchema>;

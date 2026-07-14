@@ -23,7 +23,7 @@
     }
 
     body {
-        @apply bg-background text-foreground min-h-screen font-des;
+        @apply bg-background text-foreground font-des;
     }
 
     html {

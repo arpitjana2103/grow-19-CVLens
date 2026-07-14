@@ -13,9 +13,9 @@ export default function NavBar({ className }: { className?: string }) {
     const { isAuthenticated } = useAuthContext();
     const isHomeRoute = pathname === "/";
     return (
-        <header className={cn("w-screen", className)}>
+        <header className={cn("w-screen border-b border-primary/30", className)}>
             <Container>
-                <div className="flex items-center justify-between py-4 md:py-6">
+                <div className="flex items-center justify-between py-4 md:py-4">
                     <div>
                         <Link to="/">
                             <Logo />

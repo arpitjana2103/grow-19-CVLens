@@ -5,10 +5,10 @@ import NavBar from "./NavBar";
 
 export default function AppLayout() {
     return (
-        <div className="flex min-h-screen flex-col">
+        <div className="flex h-dvh flex-col">
             <NavBar />
-            <main className="flex grow flex-col">
-                <Container className="grow overflow-auto pb-20">
+            <main className="flex-1 overflow-auto">
+                <Container className="grow overflow-y-scroll pb-20">
                     <Outlet />
                 </Container>
             </main>
