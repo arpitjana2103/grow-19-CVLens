@@ -13,6 +13,8 @@ type LoginFormValues = {
     password: string;
 };
 
+const BE_ORIGIN = import.meta.env.VITE_BACKEND_ORIGIN;
+
 export default function LoginView() {
     const {
         register,
@@ -42,7 +44,7 @@ export default function LoginView() {
     return (
         <Container>
             <main>
-                <a href="http://localhost:8000/api/auth/google">
+                <a href={`${BE_ORIGIN}/api/auth/google`}>
                     <Button>Login with Google</Button>
                 </a>
                 <form onSubmit={handleSubmit(onSubmit)}>

@@ -7,12 +7,13 @@ import {
     registerResponseSchema,
 } from "../schemas/auth.schema";
 
-const BASE_URL = `http://localhost:8000`;
-const axiosClient = axiosCreateInstance({ baseURL: BASE_URL, withCredentials: true });
+const BE_ORIGIN = import.meta.env.VITE_BACKEND_ORIGIN;
+
+const axiosClient = axiosCreateInstance({ baseURL: `${BE_ORIGIN}/api`, withCredentials: true });
 
 export async function getUser() {
     try {
-        const res = await axiosClient.get("/api/auth/me");
+        const res = await axiosClient.get("/auth/me");
 
         const response = getMeResponseSchema.parse(res.data);
 
@@ -36,7 +37,7 @@ export async function register({
     email: string;
     password: string;
 }) {
-    const res = await axiosClient.post("/api/auth/register", {
+    const res = await axiosClient.post("/auth/register", {
         username: username,
         email: email,
         password: password,
@@ -47,7 +48,7 @@ export async function register({
 }
 
 export async function login({ email, password }: { email: string; password: string }) {
-    const res = await axiosClient.post("/api/auth/login", {
+    const res = await axiosClient.post("/auth/login", {
         email: email,
         password: password,
     });
@@ -57,7 +58,7 @@ export async function login({ email, password }: { email: string; password: stri
 }
 
 export async function logout() {
-    const res = await axiosClient.post("/api/auth/logout");
+    const res = await axiosClient.post("/auth/logout");
     const data = logoutResponseSchema.parse(res.data);
 
     return data;
