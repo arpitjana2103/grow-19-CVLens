@@ -28,12 +28,12 @@ export function useRegisterMutation() {
             toast.success("Registration successful", { id: TOAST_ID });
         },
         onError: function (error) {
+            console.log("Error from : useRegisterMutation");
             if (error instanceof AxiosError) {
                 const errorData = error.response?.data;
                 console.log(errorData);
                 toast.error(errorData.message, { id: TOAST_ID });
             } else {
-                console.log("Error from : useRegisterMutation");
                 console.log(error);
                 toast.error("Registration failed", { id: TOAST_ID });
             }
@@ -85,12 +85,12 @@ export function useLogoutMutation() {
             toast.success("Logout successful", { id: TOAST_ID });
         },
         onError: function (error) {
+            console.log("Error from : useLogoutMutation");
             if (error instanceof AxiosError) {
                 const errorData = error.response?.data;
                 console.log(errorData);
                 toast.error(errorData.message, { id: TOAST_ID });
             } else {
-                console.log("Error from : useLogoutMutation");
                 console.log(error);
                 toast.error("Logout failed", { id: TOAST_ID });
             }

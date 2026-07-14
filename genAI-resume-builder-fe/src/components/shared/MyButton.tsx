@@ -12,13 +12,13 @@ type MyButtonProps = {
 export default function MyButton({ children, className, type, onClick }: MyButtonProps) {
     const btnTypes = {
         holo: "bg-transparent text-foreground",
-        filled: "bg-foreground text-background hover:bg-foreground/90 hover:border-foreground/90",
+        filled: "bg-foreground text-background hover:bg-foreground  hover:text-primary",
     };
     return (
         <Button
             onClick={onClick}
             className={cn(
-                "cursor-pointer rounded-sm border-2 border-foreground",
+                "cursor-pointer rounded-sm border-2 border-border",
                 className,
                 btnTypes[type],
             )}

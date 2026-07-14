@@ -36,7 +36,12 @@ export default function App() {
                         },
                         {
                             element: <ProtectedRoute />,
-                            children: [{ path: "app", element: <AppView /> }],
+                            children: [
+                                {
+                                    path: "app",
+                                    element: <AppView />,
+                                },
+                            ],
                         },
                     ],
                 },
