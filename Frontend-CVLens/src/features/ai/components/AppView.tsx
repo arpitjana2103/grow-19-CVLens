@@ -1,22 +1,16 @@
 import {
-    Asterisk02Icon,
     Briefcase07Icon,
     Cancel01Icon,
     CloudUploadIcon,
-    DocumentAttachmentIcon,
-    Job,
-    MagicWand01Icon,
     Male02Icon,
     Pdf01Icon,
-    Pdf02Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useState, type ChangeEvent, type DragEvent } from "react";
-import toast from "react-hot-toast";
+// import toast from "react-hot-toast";
 
 import geminiImg from "@/assets/gemini.png";
 import AppHeading from "@/components/shared/AppHeading";
-import MyButton from "@/components/shared/MyButton";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn, formatFileSize } from "@/lib/utils";
@@ -25,7 +19,7 @@ export default function AppView() {
     return (
         <>
             <AppHeading />
-            <div className="mx-auto mt-8 flex h-180 w-full flex-col border-2 border-border bg-primary p-6">
+            <form className="mx-auto mt-8 flex h-180 w-full flex-col border-2 border-border bg-primary p-6">
                 <div className="flex grow">
                     <JobDescription />
                     <Profile />
@@ -33,7 +27,10 @@ export default function AppView() {
                 <div className="mt-6 flex items-center justify-between">
                     <p>AI Powered Strategy Generation • 30s Approx </p>
 
-                    <Button className="cursor-pointer rounded-full bg-background px-5 py-6 text-lg text-foreground hover:bg-background/90">
+                    <Button
+                        type="submit"
+                        className="cursor-pointer rounded-full bg-background px-5 py-6 text-lg text-foreground hover:bg-background/90"
+                    >
                         <span className="font-head">
                             Generate With{" "}
                             <span className="pl-1 font-gemini font-medium text-blue-400">
@@ -45,7 +42,7 @@ export default function AppView() {
                         </span>
                     </Button>
                 </div>
-            </div>
+            </form>
         </>
     );
 }
@@ -59,10 +56,17 @@ function JobDescription() {
                     <span className="font-head text-lg">Target Job Description</span>
                 </p>
             </div>
-            <textarea
-                placeholder="Paste the full job description here ... "
-                className="grow resize-none bg-foreground p-3 text-base text-background focus:outline-none"
-            ></textarea>
+            <div className="relative grow">
+                <textarea
+                    required
+                    placeholder="Paste the full job description here ... "
+                    className="h-full w-full resize-none bg-foreground p-4 pt-12 text-base text-background focus:outline-none"
+                ></textarea>
+                <div className="absolute top-4 flex w-full items-center justify-between px-4 text-primary">
+                    <span>min : 300 & max : 2000</span>
+                    <span>curr : 408</span>
+                </div>
+            </div>
         </div>
     );
 }
@@ -86,9 +90,12 @@ function SelfDescription() {
             <p className="mt-4 mb-2 font-head text-lg">Self Description</p>
             <div className="relative grow">
                 <textarea
-                    className="h-full w-full resize-none bg-foreground p-3 text-base text-background focus:outline-none"
+                    className="h-full w-full resize-none bg-foreground p-4 pt-12 text-base text-background focus:outline-none"
                     placeholder="Briefly describe your experience, key skills, and years of experience."
                 ></textarea>
+                <div className="absolute top-4 flex w-full items-center justify-end px-4 text-primary">
+                    <span className="">408 / 2000</span>
+                </div>
                 <div className="absolute right-4 bottom-3 mt-2 flex cursor-pointer items-center justify-end gap-3 bg-foreground p-2">
                     <label
                         htmlFor="check-selfdes"
@@ -222,7 +229,13 @@ function ResumeUpload() {
                 </div>
             </label>
             {!file && (
-                <input type="file" onChange={handleSelect} id="resume-upload" className="hidden" />
+                <input
+                    required
+                    type="file"
+                    onChange={handleSelect}
+                    id="resume-upload"
+                    className="hidden"
+                />
             )}
         </div>
     );

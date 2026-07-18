@@ -14,7 +14,7 @@ export default function MyButton({ children, className, varient, ...props }: MyB
     return (
         <Button
             className={cn(
-                "cursor-pointer rounded-sm border-[0.15rem] border-border text-base",
+                "cursor-pointer rounded-sm border-[0.15rem] py-4 border-border text-base",
                 btnVarients[varient],
                 className,
             )}

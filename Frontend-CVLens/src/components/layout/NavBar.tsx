@@ -1,4 +1,4 @@
-import { LoginCircle02FreeIcons, LogoutCircle02FreeIcons } from "@hugeicons/core-free-icons";
+import { LoginCircle02FreeIcons, LogoutCircle02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Link, useLocation, useNavigate } from "react-router";
 
@@ -49,7 +49,7 @@ export default function NavBar({ className }: { className?: string }) {
                                 <span>
                                     <HugeiconsIcon
                                         strokeWidth={2.5}
-                                        icon={LogoutCircle02FreeIcons}
+                                        icon={LogoutCircle02Icon}
                                         className="text-foreground"
                                     />
                                 </span>
