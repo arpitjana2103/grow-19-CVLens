@@ -17,14 +17,63 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn, formatFileSize } from "@/lib/utils";
 
+import { useCreateInterviewReportMutation } from "../queries/ai.query";
+
 export default function AppView() {
+    const [jobDescription, setJobDescription] = useState("");
+    const [selfDescription, setSelfDescription] = useState("");
+    const [file, setFile] = useState<File | null>(null);
+
+    const createInterviewReportMutation = useCreateInterviewReportMutation();
+    const generatingReport = createInterviewReportMutation.isPending;
+
+    function resetForm() {
+        setJobDescription("");
+        setSelfDescription("");
+        setFile(null);
+    }
+
+    const handleSubmit = async function (e: React.SyntheticEvent<HTMLFormElement>) {
+        e.preventDefault();
+        if (jobDescription.length < 300) {
+            toast.error("Job description must be at least 300 characters");
+            return;
+        }
+        if (selfDescription.length === 0) {
+            setSelfDescription("Using Resume Data as Self-Description");
+        }
+        if (!file) {
+            toast.error("Please upload a resume");
+            return;
+        }
+
+        await createInterviewReportMutation.mutateAsync({
+            jobDescription,
+            selfDescription,
+            resume: file,
+        });
+
+        resetForm();
+    };
+
     return (
         <>
             <AppHeading />
-            <form className="mx-auto mt-8 flex w-full flex-col border-2 border-border bg-primary p-4 lg:h-180 lg:p-6">
+            <form
+                className="mx-auto mt-8 flex w-full flex-col border-2 border-border bg-primary p-4 lg:h-180 lg:p-6"
+                onSubmit={handleSubmit}
+            >
                 <div className="flex grow flex-col gap-6 lg:flex-row lg:gap-0">
-                    <JobDescription />
-                    <Profile />
+                    <JobDescription
+                        jobDescription={jobDescription}
+                        setJobDescription={setJobDescription}
+                    />
+                    <Profile
+                        file={file}
+                        setFile={setFile}
+                        selfDescription={selfDescription}
+                        setSelfDescription={setSelfDescription}
+                    />
                 </div>
                 <div className="mt-6 flex items-center justify-between">
                     <p>AI Powered Strategy Generation • 30s Approx </p>
@@ -34,13 +83,17 @@ export default function AppView() {
                         className="cursor-pointer rounded-full bg-white px-5 py-6 text-lg text-foreground shadow-2xl hover:translate-y-1 hover:bg-white"
                     >
                         <span className="font-head">
-                            Generate With{" "}
+                            {generatingReport ? "Generating With" : "Generate With"}
                             <span className="pl-1 font-gemini font-medium text-blue-400">
-                                Gemini
+                                {"  "}Gemini
                             </span>
                         </span>
                         <span>
-                            <img className="h-6 w-6" src={geminiImg} alt="" />
+                            <img
+                                className={cn("h-6 w-6", generatingReport && "animate-spin")}
+                                src={geminiImg}
+                                alt=""
+                            />
                         </span>
                     </Button>
                 </div>
@@ -81,7 +134,15 @@ function InterviewHistory() {
     );
 }
 
-function JobDescription() {
+function JobDescription({
+    jobDescription,
+    setJobDescription,
+}: {
+    jobDescription: string;
+    setJobDescription: React.Dispatch<React.SetStateAction<string>>;
+}) {
+    const maxLength = 2000;
+
     return (
         <div className="flex flex-1 flex-col lg:border-r-2 lg:border-border lg:pr-6">
             <div className="mb-4 flex items-center gap-2">
@@ -92,40 +153,74 @@ function JobDescription() {
             </div>
             <div className="relative grow">
                 <textarea
-                    required
                     placeholder="Paste the full job description here ... "
+                    value={jobDescription.slice(0, maxLength)}
+                    onChange={(e) => setJobDescription(e.target.value)}
                     className="h-80 w-full resize-none bg-foreground p-4 pt-12 text-base text-background focus:outline-none lg:h-full"
                 ></textarea>
                 <div className="absolute top-4 flex w-full items-center justify-between px-4 text-primary">
                     <span>min : 300 & max : 2000</span>
-                    <span>curr : 408</span>
+                    <span>curr : {jobDescription.length}</span>
                 </div>
             </div>
         </div>
     );
 }
 
-function Profile() {
+function Profile({
+    file,
+    setFile,
+    selfDescription,
+    setSelfDescription,
+}: {
+    file: File | null;
+    setFile: React.Dispatch<React.SetStateAction<File | null>>;
+    selfDescription: string;
+    setSelfDescription: React.Dispatch<React.SetStateAction<string>>;
+}) {
     return (
         <div className="flex flex-1 flex-col lg:pl-6">
             <p className="mb-2 flex items-center gap-2">
                 <HugeiconsIcon strokeWidth={2} className="h-6 w-6" icon={Male02Icon} />
                 <span className="font-head text-lg">Your Profile</span>
             </p>
-            <ResumeUpload />
-            <SelfDescription />
+            <ResumeUpload file={file} setFile={setFile} />
+            <SelfDescription
+                selfDescription={selfDescription}
+                setSelfDescription={setSelfDescription}
+            />
         </div>
     );
 }
 
-function SelfDescription() {
+function SelfDescription({
+    selfDescription,
+    setSelfDescription,
+}: {
+    selfDescription: string;
+    setSelfDescription: React.Dispatch<React.SetStateAction<string>>;
+}) {
+    const [checked, setChecked] = useState(false);
+
+    function handleCheckChange(value: boolean) {
+        if (value) {
+            setSelfDescription("Use Resume Data as Self-Description");
+        } else {
+            setSelfDescription("");
+        }
+        setChecked(value);
+    }
+
     return (
         <div className="flex grow flex-col">
             <p className="mt-4 mb-2 font-head text-lg">Self Description</p>
             <div className="relative grow">
                 <textarea
+                    value={selfDescription}
+                    onChange={(e) => setSelfDescription(e.target.value)}
                     className="h-60 w-full resize-none bg-foreground p-4 pt-12 text-base text-background focus:outline-none lg:h-full"
                     placeholder="Briefly describe your experience, key skills, and years of experience."
+                    disabled={checked}
                 ></textarea>
                 <div className="absolute top-4 flex w-full items-center justify-end px-4 text-primary">
                     <span className="">408 / 1000</span>
@@ -138,6 +233,8 @@ function SelfDescription() {
                         Use Resume data as self-description
                     </label>
                     <Checkbox
+                        checked={checked}
+                        onCheckedChange={handleCheckChange}
                         id="check-selfdes"
                         className="size-4 rounded-none border-none bg-background ring-2 ring-foreground data-checked:bg-background data-checked:text-foreground"
                     />
@@ -147,8 +244,13 @@ function SelfDescription() {
     );
 }
 
-function ResumeUpload() {
-    const [file, setFile] = useState<File | null>(null);
+function ResumeUpload({
+    file,
+    setFile,
+}: {
+    file: File | null;
+    setFile: React.Dispatch<React.SetStateAction<File | null>>;
+}) {
     const [drag, setDrag] = useState(false);
 
     function handleSelect(e: ChangeEvent<HTMLInputElement>) {
@@ -261,13 +363,7 @@ function ResumeUpload() {
                 </div>
             </label>
             {!file && (
-                <input
-                    required
-                    type="file"
-                    onChange={handleSelect}
-                    id="resume-upload"
-                    className="hidden"
-                />
+                <input type="file" onChange={handleSelect} id="resume-upload" className="hidden" />
             )}
         </div>
     );
