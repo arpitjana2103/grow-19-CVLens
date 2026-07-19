@@ -1,13 +1,15 @@
 import {
+    ArrowRight02Icon,
     Briefcase07Icon,
     Cancel01Icon,
+    ClipboardClockIcon,
     CloudUploadIcon,
     Male02Icon,
     Pdf01Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useState, type ChangeEvent, type DragEvent } from "react";
-// import toast from "react-hot-toast";
+import { toast } from "react-hot-toast";
 
 import geminiImg from "@/assets/gemini.png";
 import AppHeading from "@/components/shared/AppHeading";
@@ -19,8 +21,8 @@ export default function AppView() {
     return (
         <>
             <AppHeading />
-            <form className="mx-auto mt-8 flex h-180 w-full flex-col border-2 border-border bg-primary p-6">
-                <div className="flex grow">
+            <form className="mx-auto mt-8 flex w-full flex-col border-2 border-border bg-primary p-4 lg:h-180 lg:p-6">
+                <div className="flex grow flex-col gap-6 lg:flex-row lg:gap-0">
                     <JobDescription />
                     <Profile />
                 </div>
@@ -29,7 +31,7 @@ export default function AppView() {
 
                     <Button
                         type="submit"
-                        className="cursor-pointer rounded-full bg-background px-5 py-6 text-lg text-foreground hover:bg-background/90"
+                        className="cursor-pointer rounded-full bg-white px-5 py-6 text-lg text-foreground shadow-2xl hover:translate-y-1 hover:bg-white"
                     >
                         <span className="font-head">
                             Generate With{" "}
@@ -43,13 +45,45 @@ export default function AppView() {
                     </Button>
                 </div>
             </form>
+            <InterviewHistory />
         </>
+    );
+}
+
+function InterviewHistory() {
+    return (
+        <div className="mt-8 cursor-pointer">
+            <h1 className="mb-4 font-head text-xl">History</h1>
+            <div className="flex flex-wrap gap-4">
+                <div className="group w-fit border-2 border-foreground p-4 hover:bg-primary">
+                    <p className="mb-2 font-semibold text-foreground/50">ABC123456</p>
+                    <div className="flex gap-4">
+                        <div>
+                            <HugeiconsIcon icon={ClipboardClockIcon} strokeWidth={2} />
+                        </div>
+
+                        <div className="">
+                            <h3 className="font-head">Mern Stack Developer</h3>
+                            <p>21 March 1999, 5:30 pm</p>
+                        </div>
+
+                        <div>
+                            <HugeiconsIcon
+                                icon={ArrowRight02Icon}
+                                strokeWidth={2}
+                                className="text-primaryDark group-hover:text-foreground"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     );
 }
 
 function JobDescription() {
     return (
-        <div className="flex flex-1 flex-col border-r-2 border-border pr-6">
+        <div className="flex flex-1 flex-col lg:border-r-2 lg:border-border lg:pr-6">
             <div className="mb-4 flex items-center gap-2">
                 <p className="flex items-center gap-2">
                     <HugeiconsIcon strokeWidth={2} className="h-6 w-6" icon={Briefcase07Icon} />
@@ -60,7 +94,7 @@ function JobDescription() {
                 <textarea
                     required
                     placeholder="Paste the full job description here ... "
-                    className="h-full w-full resize-none bg-foreground p-4 pt-12 text-base text-background focus:outline-none"
+                    className="h-80 w-full resize-none bg-foreground p-4 pt-12 text-base text-background focus:outline-none lg:h-full"
                 ></textarea>
                 <div className="absolute top-4 flex w-full items-center justify-between px-4 text-primary">
                     <span>min : 300 & max : 2000</span>
@@ -73,7 +107,7 @@ function JobDescription() {
 
 function Profile() {
     return (
-        <div className="flex flex-1 flex-col pl-6">
+        <div className="flex flex-1 flex-col lg:pl-6">
             <p className="mb-2 flex items-center gap-2">
                 <HugeiconsIcon strokeWidth={2} className="h-6 w-6" icon={Male02Icon} />
                 <span className="font-head text-lg">Your Profile</span>
@@ -90,11 +124,11 @@ function SelfDescription() {
             <p className="mt-4 mb-2 font-head text-lg">Self Description</p>
             <div className="relative grow">
                 <textarea
-                    className="h-full w-full resize-none bg-foreground p-4 pt-12 text-base text-background focus:outline-none"
+                    className="h-60 w-full resize-none bg-foreground p-4 pt-12 text-base text-background focus:outline-none lg:h-full"
                     placeholder="Briefly describe your experience, key skills, and years of experience."
                 ></textarea>
                 <div className="absolute top-4 flex w-full items-center justify-end px-4 text-primary">
-                    <span className="">408 / 2000</span>
+                    <span className="">408 / 1000</span>
                 </div>
                 <div className="absolute right-4 bottom-3 mt-2 flex cursor-pointer items-center justify-end gap-3 bg-foreground p-2">
                     <label
@@ -165,7 +199,7 @@ function ResumeUpload() {
             <p className="mb-2 font-head text-lg">Upload Resume</p>
             <label
                 htmlFor="resume-upload"
-                className="block h-40 w-full cursor-pointer bg-foreground p-2"
+                className="block h-45 w-full cursor-pointer bg-foreground p-2"
             >
                 <div
                     onDragEnter={handleDragEnter}
@@ -199,29 +233,27 @@ function ResumeUpload() {
                             </div>
                         )}
                         {file && (
-                            <div className="flex items-center justify-center gap-2.5">
+                            <div className="flex items-center justify-center gap-2.5 rounded-[0.5rem] bg-background p-2 px-3">
                                 <button onClick={handleRemoveFile} className="cursor-pointer">
                                     <HugeiconsIcon
                                         icon={Cancel01Icon}
                                         strokeWidth={2.5}
-                                        className="h-4 w-4 text-primary"
+                                        className="h-4 w-4 text-foreground"
                                     />
                                 </button>
                                 <div>
                                     <HugeiconsIcon
                                         icon={Pdf01Icon}
                                         strokeWidth={1}
-                                        className="h-10 w-10 text-primary"
+                                        className="h-10 w-10 text-red-500"
                                     />
                                 </div>
-                                <div className="">
+                                <div className="text-foreground">
                                     <p className="text-base">
                                         {file.name.slice(0, 30)}
                                         {file.name.length > 30 ? "..." : ""}
                                     </p>
-                                    <span className="text-sm text-background/70">
-                                        {formatFileSize(file.size)}
-                                    </span>
+                                    <span className="text-sm">{formatFileSize(file.size)}</span>
                                 </div>
                             </div>
                         )}

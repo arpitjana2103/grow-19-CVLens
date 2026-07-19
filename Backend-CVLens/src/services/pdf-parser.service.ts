@@ -1,10 +1,15 @@
 import { PDFParse } from "pdf-parse";
 
 export const parsePDF = async function (buffer: Buffer) {
-    const parser = new PDFParse(Uint8Array.from(buffer));
-    const [textResult, infoResult] = await Promise.all([parser.getText(), parser.getInfo()]);
+    const parser = new PDFParse({ data: buffer });
 
-    await parser.destroy();
+    const textResult = await parser.getText();
+    const infoResult = await parser.getInfo();
+
+    console.log("PDF PARSER - textResult:", textResult);
+    console.log("PDF PARSER - infoResult:", infoResult);
+
+    await parser.destroy(); // release worker resources
 
     return {
         text: textResult.text,

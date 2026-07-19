@@ -8,7 +8,7 @@ type MyButtonProps = React.ComponentProps<typeof Button> & {
 
 export default function MyButton({ children, className, varient, ...props }: MyButtonProps) {
     const btnVarients = {
-        holo: "bg-transparent text-foreground",
+        holo: "bg-transparent text-foreground border-2",
         filled: "bg-foreground text-white hover:bg-foreground hover:bg-foreground/95 hover:border-border/95",
     };
     return (
