@@ -49,34 +49,35 @@ export default function ReportView() {
         return <ViewLoader />;
     }
 
-    const demoInterviewReport = query.data!;
+    const interviewReport = query.data!;
 
-    console.log(query.data);
+    console.log(interviewReport);
 
-    const match60 = demoInterviewReport.matchScore >= 60;
+    const goodMatch = interviewReport.matchScore >= 60;
+
     return (
         <div className="mt-6">
             <h1 className="text-center font-head text-xl sm:text-2xl">
                 <span>Interview Report : </span>
-                <span className="text-primaryDark">{demoInterviewReport.id.toUpperCase()}</span>
+                <span className="text-primaryDark">{interviewReport.id.toUpperCase()}</span>
             </h1>
             <div className="relative mt-6 flex flex-col items-center justify-center border-4 border-primary bg-foreground pt-16 text-background">
                 <div
                     className={cn(
-                        "text-foreground flex h-30 w-30 flex-col items-center justify-center rounded-full",
-                        match60 && "bg-primary",
-                        !match60 && "bg-red-300",
+                        "text-foreground ring-6  flex h-30 w-30 flex-col items-center justify-center rounded-full",
+                        goodMatch && "bg-primary ring-primary/60",
+                        !goodMatch && "bg-red-300 ring-red-300/60",
                     )}
                 >
-                    <span className="font-head text-4xl">{demoInterviewReport.matchScore}%</span>
+                    <span className="font-head text-4xl">{interviewReport.matchScore}%</span>
                     <span>Match</span>
                 </div>
                 <h1 className="mt-4 text-center font-head text-xl sm:text-2xl">
-                    {demoInterviewReport.jobTitle}
+                    {interviewReport.jobTitle}
                 </h1>
-                <CreatedAt createdAt={demoInterviewReport.createdAt} />
+                <CreatedAt createdAt={interviewReport.createdAt} />
                 <GeminiLogo />
-                <SkillGapTable skillGaps={demoInterviewReport.skillGaps} />
+                <SkillGapTable skillGaps={interviewReport.skillGaps} />
 
                 <div className="mt-10 w-full bg-primary pt-8">
                     <Tabs defaultValue="account" className="w-full">
@@ -85,15 +86,15 @@ export default function ReportView() {
                             <MyTabTrigger text="Technical Questions" />
                         </TabsList>
                         <MyTabContent text="Behavioral Questions">
-                            <MyAccordion questions={demoInterviewReport.behavioralQuestions} />
+                            <MyAccordion questions={interviewReport.behavioralQuestions} />
                         </MyTabContent>
                         <MyTabContent text="Technical Questions">
-                            <MyAccordion questions={demoInterviewReport.technicalQuestions} />
+                            <MyAccordion questions={interviewReport.technicalQuestions} />
                         </MyTabContent>
                     </Tabs>
                 </div>
 
-                <PreparationPlan plan={demoInterviewReport.preparationPlan} />
+                <PreparationPlan plan={interviewReport.preparationPlan} />
             </div>
         </div>
     );
