@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { Link, useSearchParams } from "react-router";
 
+import GoogleBtn from "@/components/shared/GoogleBtn";
 import MyButton from "@/components/shared/MyButton";
 import Spinner from "@/components/shared/Spinner";
 import { Field, FieldDescription, FieldGroup } from "@/components/ui/field";
@@ -15,8 +16,7 @@ import {
 } from "@/components/ui/input-group";
 
 import { useLoginMutation } from "../queries/auth.query";
-import { LoginFormSchema, type TLoginFormData } from "../schemas/auth.schema";
-import GoogleBtn from "./GoogleBtn";
+import { LoginFormSchema, type TLoginFormData } from "../validations/auth.validation";
 
 const BE_ORIGIN = import.meta.env.VITE_BACKEND_ORIGIN;
 

@@ -5,7 +5,7 @@ import {
     loginResponseSchema,
     logoutResponseSchema,
     registerResponseSchema,
-} from "../schemas/auth.schema";
+} from "../validations/auth.validation";
 
 const BE_ORIGIN = import.meta.env.VITE_BACKEND_ORIGIN;
 

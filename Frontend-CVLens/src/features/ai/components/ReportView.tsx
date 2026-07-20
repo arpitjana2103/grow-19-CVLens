@@ -14,7 +14,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn, formatDate } from "@/lib/utils";
 
 import { useInterviewReportQuery } from "../queries/ai.query";
-import { type TPreparationPlan, type TQuestion, type TSkillGap } from "../schemas/report.schema";
+import {
+    type TPreparationPlan,
+    type TQuestion,
+    type TSkillGap,
+} from "../validations/report.validation";
 
 type SkillGapTableProps = {
     skillGaps: TSkillGap[];
@@ -46,6 +50,8 @@ export default function ReportView() {
     }
 
     const demoInterviewReport = query.data!;
+
+    console.log(query.data);
 
     const match60 = demoInterviewReport.matchScore >= 60;
     return (

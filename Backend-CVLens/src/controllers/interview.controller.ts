@@ -13,8 +13,8 @@ import { parsePDF } from "../services/pdf-parser.service.js";
 import { AppError } from "../utils/errors/app-error.util.js";
 import { sendResponse } from "../utils/response.util.js";
 import {
-    generateInterviewReportInputSchema,
-    interviewReportIdSchema,
+    GenerateInterviewReportInputSchema,
+    InterViewReportByIdResponseSchema,
 } from "../validations/interview.validation.js";
 
 /*
@@ -49,7 +49,7 @@ export const generateInterviewReportController = handleAsyncError(async function
         });
     }
 
-    const { jobDescription, selfDescription } = generateInterviewReportInputSchema.parse(req.body);
+    const { jobDescription, selfDescription } = GenerateInterviewReportInputSchema.parse(req.body);
 
     const { text: resumeText, pageCount: resumePageCount } = await parsePDF(req.file.buffer);
 
@@ -122,7 +122,7 @@ export const getInterviewReportByIdController = handleAsyncError(async function 
         statusCode: HTTPSTATUSCODE.OK,
         status: "success",
         data: {
-            interviewReport: interviewReportIdSchema.parse(interviewReport),
+            interviewReport: InterViewReportByIdResponseSchema.parse(interviewReport),
         },
     });
 });

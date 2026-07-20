@@ -1,4 +1,4 @@
-import type { TUser } from "@/features/auth/schemas/auth.schema";
+import type { TUser } from "@/features/auth/validations/auth.validation";
 
 import { createContext, useContext, useEffect, useMemo } from "react";
 import { toast } from "react-hot-toast";

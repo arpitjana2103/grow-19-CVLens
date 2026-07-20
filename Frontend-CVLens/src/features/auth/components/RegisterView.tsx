@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
 
+import GoogleBtn from "@/components/shared/GoogleBtn";
 import MyButton from "@/components/shared/MyButton";
 import Spinner from "@/components/shared/Spinner";
 import { Field, FieldDescription, FieldGroup } from "@/components/ui/field";
@@ -13,8 +14,7 @@ import {
 } from "@/components/ui/input-group";
 
 import { useRegisterMutation } from "../queries/auth.query";
-import { RegisterFormSchema, type TRegisterFormData } from "../schemas/auth.schema";
-import GoogleBtn from "./GoogleBtn";
+import { RegisterFormSchema, type TRegisterFormData } from "../validations/auth.validation";
 
 const BE_ORIGIN = import.meta.env.VITE_BACKEND_ORIGIN;
 
