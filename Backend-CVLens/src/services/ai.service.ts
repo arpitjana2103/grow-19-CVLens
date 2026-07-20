@@ -1,10 +1,12 @@
 import { GoogleGenAI } from "@google/genai";
+import puppeteer from "puppeteer";
 import * as z from "zod";
 
 import { HTTPSTATUSCODE } from "../configs/http.config.js";
 import { ErrorCodeEnum } from "../enums/error-code.enum.js";
 import { AppError } from "../utils/errors/app-error.util.js";
-import { InterViewReportAIResponseSchema } from "../validations/ai.validation.js";
+import { InterViewReportAIResponseSchema, ResumePdfSchema } from "../validations/ai.validation.js";
+import { generateInterviewReportPrompt, generateResumePdfPrompt } from "./ai.prompts.js";
 
 // new GoogleGenAI({
 //     apiKey: config.GEMINI_API_KEY,
@@ -25,15 +27,7 @@ export const generateInterviewReport = async function ({
     selfDescription: string;
     jobDescription: string;
 }) {
-    const prompt = `
-        Generate an interview report for a candidate with the following details [Resume, Self-Description, Job-Description]:
-            [Resume] : --------------------------------------
-            [[${resume}]]
-            [Self-Description] : ----------------------------
-            [[${selfDescription}]]
-            [Job-Description] : -----------------------------
-            [[${jobDescription}]]
-    `;
+    const prompt = generateInterviewReportPrompt({ resume, selfDescription, jobDescription });
 
     try {
         const interaction = await client.interactions.create({
@@ -67,3 +61,54 @@ export const generateInterviewReport = async function ({
         });
     }
 };
+
+async function generatePdfFromHtml(htmlContent: string) {
+    const browser = await puppeteer.launch();
+
+    try {
+        const page = await browser.newPage();
+
+        await page.setContent(htmlContent, {
+            waitUntil: "load",
+        });
+
+        await page.waitForNetworkIdle();
+
+        const pdfBuffer = await page.pdf({
+            format: "A4",
+            printBackground: true,
+        });
+
+        return Buffer.from(pdfBuffer);
+    } finally {
+        await browser.close();
+    }
+}
+
+export async function generateResumePdf({
+    resume,
+    selfDescription,
+    jobDescription,
+}: {
+    resume: string;
+    selfDescription: string;
+    jobDescription: string;
+}) {
+    const prompt = generateResumePdfPrompt({ resume, selfDescription, jobDescription });
+
+    const interaction = await client.interactions.create({
+        model: models.limitmax,
+        input: prompt,
+        response_format: {
+            type: "text",
+            mime_type: "application/json",
+            schema: z.toJSONSchema(ResumePdfSchema),
+        },
+    });
+
+    const jsonContent = ResumePdfSchema.parse(JSON.parse(interaction.output_text!));
+
+    const pdfBuffer = await generatePdfFromHtml(jsonContent.html);
+
+    return pdfBuffer;
+}

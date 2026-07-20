@@ -1,3 +1,8 @@
+import type { UseMutationResult } from "@tanstack/react-query";
+
+import { Button } from "@base-ui/react/button";
+import { FileDownloadIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { AxiosError } from "axios";
 import { toast } from "react-hot-toast";
 import { useParams } from "react-router";
@@ -13,7 +18,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn, formatDate } from "@/lib/utils";
 
-import { useInterviewReportQuery } from "../queries/ai.query";
+import { useGenerateResumeMutation, useInterviewReportQuery } from "../queries/ai.query";
 import {
     type TPreparationPlan,
     type TQuestion,
@@ -35,6 +40,7 @@ export default function ReportView() {
     const params = useParams();
     const id = params.reportId;
     const query = useInterviewReportQuery(id!);
+    const generateResumeMutation = useGenerateResumeMutation();
 
     if (query.isLoading) {
         return <ViewLoader />;
@@ -51,17 +57,43 @@ export default function ReportView() {
 
     const interviewReport = query.data!;
 
-    console.log(interviewReport);
-
     const goodMatch = interviewReport.matchScore >= 60;
+
+    const handleResumeAction = () => {
+        generateResumeMutation.mutate(interviewReport.id);
+
+        if (generateResumeMutation.isPending) {
+            return;
+        }
+
+        if (generateResumeMutation.data) {
+            const a = document.createElement("a");
+            a.href = generateResumeMutation.data;
+            a.download = `resume_${interviewReport.id}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+            generateResumeMutation.reset();
+
+            return;
+        }
+    };
 
     return (
         <div className="mt-6">
+            <div className="mb-6 flex items-center justify-center">
+                <GenerateResumeBtn
+                    generateResumeMutation={generateResumeMutation}
+                    handleResumeAction={handleResumeAction}
+                />
+            </div>
+
             <h1 className="text-center font-head text-xl sm:text-2xl">
                 <span>Interview Report : </span>
                 <span className="text-primaryDark">{interviewReport.id.toUpperCase()}</span>
             </h1>
-            <div className="relative mt-6 flex flex-col items-center justify-center border-4 border-primary bg-foreground pt-16 text-background">
+            <div className="relative mt-6 flex flex-col items-center justify-center border-4 border-primary bg-foreground pt-16 pb-6 text-background">
                 <div
                     className={cn(
                         "text-foreground ring-6  flex h-30 w-30 flex-col items-center justify-center rounded-full",
@@ -95,8 +127,64 @@ export default function ReportView() {
                 </div>
 
                 <PreparationPlan plan={interviewReport.preparationPlan} />
+
+                <GenerateResumeBtn
+                    generateResumeMutation={generateResumeMutation}
+                    handleResumeAction={handleResumeAction}
+                />
             </div>
         </div>
+    );
+}
+
+function GenerateResumeBtn({
+    generateResumeMutation,
+    handleResumeAction,
+}: {
+    generateResumeMutation: UseMutationResult<string, Error, string, void>;
+    handleResumeAction: () => void;
+}) {
+    return (
+        <Button
+            className="mr-6 flex cursor-pointer items-center justify-center gap-2 self-end rounded-full border-4 border-primary bg-white px-4 py-2 text-lg text-foreground shadow-2xl transition-all hover:translate-y-0.5 hover:bg-white"
+            onClick={handleResumeAction}
+            disabled={generateResumeMutation.isPending}
+        >
+            <span className="font-head">
+                {generateResumeMutation.isPending && "Generating Resume With"}
+                {generateResumeMutation.data && "Resume is Ready to download"}
+                {!generateResumeMutation.isPending &&
+                    !generateResumeMutation.data &&
+                    "Generate an Accurate Resume with"}
+                <span
+                    className={cn(
+                        "pl-1 font-gemini font-medium text-blue-400",
+                        generateResumeMutation.data && "hidden",
+                    )}
+                >
+                    {"  "}Gemini
+                </span>
+            </span>
+            <span>
+                <HugeiconsIcon
+                    icon={FileDownloadIcon}
+                    strokeWidth={2}
+                    className={cn(
+                        "hidden text-primary",
+                        generateResumeMutation.data && "inline-block",
+                    )}
+                />
+                <img
+                    className={cn(
+                        "h-6 w-6",
+                        generateResumeMutation.isPending && "animate-spin",
+                        generateResumeMutation.data && "hidden",
+                    )}
+                    src={geminiImg}
+                    alt=""
+                />
+            </span>
+        </Button>
     );
 }
 

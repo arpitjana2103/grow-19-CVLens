@@ -40,3 +40,8 @@ export async function getInterviewReportsOfUser() {
     const data = response.data;
     return InterviewReportsOfAUserSchema.parse(data.data.interviewReports);
 }
+
+export async function generateResumePdfService(id: string) {
+    const response = await axiosClient.get(`/interview/${id}/resume`, { responseType: "blob" });
+    return URL.createObjectURL(response.data);
+}

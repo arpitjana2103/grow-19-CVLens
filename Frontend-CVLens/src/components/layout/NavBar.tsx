@@ -25,7 +25,7 @@ export default function NavBar({ className }: { className?: string }) {
             <Container>
                 <div className="flex items-center justify-between py-4 md:py-4">
                     <div>
-                        <Link to="/">
+                        <Link to={isAuthenticated ? (isAppRoute ? "/" : "/app") : "/"}>
                             <Logo />
                         </Link>
                     </div>

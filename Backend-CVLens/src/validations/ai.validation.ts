@@ -72,4 +72,12 @@ export const InterViewReportAIResponseSchema = z.object({
         .describe(descriptions.preparationPlan.self),
 });
 
+export const ResumePdfSchema = z.object({
+    html: z
+        .string()
+        .describe(
+            "The HTML content of the resume which can be converted to PDF using any library like puppeteer",
+        ),
+});
+
 export type TInterViewReportAIResponse = z.infer<typeof InterViewReportAIResponseSchema>;

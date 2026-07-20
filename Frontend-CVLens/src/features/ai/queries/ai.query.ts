@@ -7,6 +7,7 @@ import {
     createInterviewReport,
     getInterviewReportById,
     getInterviewReportsOfUser,
+    generateResumePdfService,
 } from "../services/ai.service";
 
 const TOAST_ID = "create-interview-report";
@@ -56,5 +57,31 @@ export function useInterviewReportsOfUserQuery() {
         queryKey: ["interview-reports"],
         queryFn: getInterviewReportsOfUser,
         retry: false,
+    });
+}
+
+export function useGenerateResumeMutation() {
+    return useMutation({
+        mutationFn: generateResumePdfService,
+        onMutate: function () {
+            toast.loading("Generating resume...", { id: "generate-resume", duration: 30 * 1000 });
+        },
+        onSuccess: function () {
+            toast.success("Resume generated successfully!", {
+                id: "generate-resume",
+                duration: 4000,
+            });
+        },
+        onError: function (error) {
+            console.log("Error from : useRegisterMutation");
+            if (error instanceof AxiosError) {
+                const errorData = error.response?.data;
+                console.log(errorData);
+                toast.error(errorData.message, { id: TOAST_ID });
+            } else {
+                console.log(error);
+                toast.error("Failed to Generate Resume", { id: TOAST_ID, duration: 4000 });
+            }
+        },
     });
 }

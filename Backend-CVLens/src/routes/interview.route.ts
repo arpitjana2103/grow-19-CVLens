@@ -2,6 +2,7 @@ import { Router } from "express";
 
 import {
     generateInterviewReportController,
+    generateResumePdfController,
     getAllInterviewReportsByUserId,
     getInterviewReportByIdController,
 } from "../controllers/interview.controller.js";
@@ -15,6 +16,7 @@ interviewRoute
     .post(uploadPDF.single("resume"), generateInterviewReportController)
     .get(getAllInterviewReportsByUserId);
 
-interviewRoute.route("/:id").get(getInterviewReportByIdController);
+interviewRoute.route("/:interviewReportId").get(getInterviewReportByIdController);
+interviewRoute.route("/:interviewReportId/resume").get(generateResumePdfController);
 
 export default interviewRoute;

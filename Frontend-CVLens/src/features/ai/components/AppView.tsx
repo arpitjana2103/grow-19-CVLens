@@ -87,7 +87,8 @@ export default function AppView() {
 
                     <Button
                         type="submit"
-                        className="cursor-pointer rounded-full bg-white px-5 py-6 text-lg text-foreground shadow-2xl hover:translate-y-1 hover:bg-white"
+                        className="h-fit cursor-pointer rounded-full bg-white px-4 py-2 text-lg text-foreground shadow-2xl transition-all hover:translate-y-0.5 hover:bg-white"
+                        disabled={generatingReport}
                     >
                         <span className="font-head">
                             {generatingReport ? "Generating With" : "Generate With"}
