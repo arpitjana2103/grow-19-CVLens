@@ -68,25 +68,32 @@ const redisStore = new RedisStore({
     ttl: ms(config.SESSION_EXPIRES_IN as msStringValue) / 1000,
 });
 
-const isProd = process.env["NODE_ENV"] === "production";
 app.set("trust proxy", 1);
+
 app.use(
     session({
-        proxy: true, // Trust the Render proxy
         store: redisStore,
         name: "g19-session",
         secret: config.SESSION_SECRET,
         resave: false,
         saveUninitialized: false,
         rolling: true,
+        proxy: true,
+
         cookie: {
-            // true on Render (HTTPS), false locally (HTTP)
-            secure: isProd,
+            // secure: ensures cookie is sent only over HTTPS in production
+            // secure: runningOnProduction(),
+            secure: runningOnProduction() ? true : false,
 
-            // "none" for cross-domain on Render, "lax" for local testing
-            sameSite: isProd ? "none" : "lax",
-
+            // httpOnly: prevents client-side JS access (mitigates XSS)
             httpOnly: true,
+
+            // sameSite: As same site "none" needs secure true
+            // so for bothe be & fe in localhoast we have to set samesite "lax" & secure "false"
+            sameSite: runningOnProduction() ? "none" : "lax",
+
+            // maxAge: session expiration time (7d)
+            // After expiry → cookie invalid → session considered expired
             maxAge: ms(config.SESSION_EXPIRES_IN as msStringValue),
         },
     }),
