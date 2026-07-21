@@ -13,7 +13,7 @@ export const authProtect = handleAsyncError(async function (
 ) {
     if (req.isAuthenticated() && req.user) next();
     else {
-        await destroySessionAndLogout(req, res);
+        // await destroySessionAndLogout(req, res);
 
         throw new AppError({
             publicMessage: "Authentication required",
