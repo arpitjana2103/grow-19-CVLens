@@ -80,7 +80,8 @@ app.use(
         cookie: {
             // secure: ensures cookie is sent only over HTTPS in production
             // secure: runningOnProduction(),
-            secure: runningOnProduction() ? true : false,
+            // secure: runningOnProduction() ? true : false,
+            secure: false,
 
             // httpOnly: prevents client-side JS access (mitigates XSS)
             httpOnly: true,
