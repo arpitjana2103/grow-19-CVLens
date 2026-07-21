@@ -67,7 +67,7 @@ const redisStore = new RedisStore({
     prefix: "g19-session:",
     ttl: ms(config.SESSION_EXPIRES_IN as msStringValue) / 1000,
 });
-
+app.set("trust proxy", 1);
 app.use(
     session({
         store: redisStore,
@@ -81,13 +81,14 @@ app.use(
             // secure: ensures cookie is sent only over HTTPS in production
             // secure: runningOnProduction(),
             // secure: runningOnProduction() ? true : false,
-            secure: false,
+            secure: true,
 
             // httpOnly: prevents client-side JS access (mitigates XSS)
             httpOnly: true,
 
             // sameSite: "lax" → basic CSRF protection while allowing top-level navigation
-            sameSite: "lax",
+            // sameSite: "lax",
+            sameSite: "none",
 
             // maxAge: session expiration time (7d)
             // After expiry → cookie invalid → session considered expired
