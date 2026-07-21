@@ -31,7 +31,6 @@ export async function createInterviewReport({
 export async function getInterviewReportById(id: string) {
     const response = await axiosClient.get(`/interview/${id}`);
     const data = response.data;
-    console.log(data.data.interviewReport);
     return InterViewReportByIdResponseSchema.parse(data.data.interviewReport);
 }
 

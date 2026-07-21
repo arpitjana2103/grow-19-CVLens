@@ -20,9 +20,9 @@ export const PreparationPlanSchema = z.object({
 export const InterViewReportByIdResponseSchema = z.object({
     id: z.string(),
     jobTitle: z.string(),
-    jobDescription: z.string(),
-    selfDescription: z.string(),
-    resumeData: z.string(),
+    // jobDescription: z.string(),
+    // selfDescription: z.string(),
+    // resumeData: z.string(),
     matchScore: z.number().min(0).max(100),
     technicalQuestions: z.array(QuestionSchema),
     behavioralQuestions: z.array(QuestionSchema),

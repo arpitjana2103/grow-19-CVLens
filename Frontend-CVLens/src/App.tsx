@@ -3,6 +3,7 @@ import { RouterProvider } from "react-router/dom";
 
 import AppLayout from "./components/layout/AppLayout";
 import AppView from "./features/ai/components/AppView";
+import DemoReportView from "./features/ai/components/DemoReportView";
 import ReportView from "./features/ai/components/ReportView";
 import LoginView from "./features/auth/components/LoginView";
 import RegisterView from "./features/auth/components/RegisterView";
@@ -32,6 +33,10 @@ export default function App() {
                                 {
                                     path: "register",
                                     element: <RegisterView />,
+                                },
+                                {
+                                    path: "report-demo",
+                                    element: <DemoReportView />,
                                 },
                             ],
                         },

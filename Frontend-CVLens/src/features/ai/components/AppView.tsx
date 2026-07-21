@@ -12,7 +12,6 @@ import { toast } from "react-hot-toast";
 import { Link } from "react-router";
 
 import geminiImg from "@/assets/gemini.png";
-import AppHeading from "@/components/shared/AppHeading";
 import ViewLoader from "@/components/shared/ViewLoader";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -74,39 +73,57 @@ export default function AppView() {
                         jobDescription={jobDescription}
                         setJobDescription={setJobDescription}
                     />
-                    <Profile
-                        file={file}
-                        setFile={setFile}
-                        selfDescription={selfDescription}
-                        setSelfDescription={setSelfDescription}
-                    />
+                    <Profile>
+                        <ResumeUpload file={file} setFile={setFile} />
+                        <SelfDescription
+                            selfDescription={selfDescription}
+                            setSelfDescription={setSelfDescription}
+                        />
+                    </Profile>
                 </div>
                 <div className="mt-6 flex items-center justify-between">
                     <p>AI Powered Strategy Generation • 30s Approx </p>
-
-                    <Button
-                        type="submit"
-                        className="h-fit cursor-pointer rounded-full bg-white px-4 py-2 text-lg text-foreground shadow-2xl transition-all hover:translate-y-0.5 hover:bg-white"
-                        disabled={generatingReport}
-                    >
-                        <span className="font-head">
-                            {generatingReport ? "Generating With" : "Generate With"}
-                            <span className="pl-1 font-gemini font-medium text-blue-400">
-                                {"  "}Gemini
-                            </span>
-                        </span>
-                        <span>
-                            <img
-                                className={cn("h-6 w-6", generatingReport && "animate-spin")}
-                                src={geminiImg}
-                                alt=""
-                            />
-                        </span>
-                    </Button>
+                    <SubmitBtn generatingReport={generatingReport} />
                 </div>
             </form>
             <InterviewHistory />
         </>
+    );
+}
+
+function SubmitBtn({ generatingReport }: { generatingReport: boolean }) {
+    return (
+        <Button
+            type="submit"
+            className="h-fit cursor-pointer rounded-full bg-white px-4 py-2 text-lg text-foreground shadow-2xl transition-all hover:translate-y-0.5 hover:bg-white"
+            disabled={generatingReport}
+        >
+            <span className="font-head">
+                {generatingReport ? "Generating With" : "Generate With"}
+                <span className="pl-1 font-gemini font-medium text-blue-400">{"  "}Gemini</span>
+            </span>
+            <span>
+                <img
+                    className={cn("h-6 w-6", generatingReport && "animate-spin")}
+                    src={geminiImg}
+                    alt=""
+                />
+            </span>
+        </Button>
+    );
+}
+
+function AppHeading() {
+    return (
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-3 text-xl sm:text-2xl">
+            <span className="font-head">Generate your custom interview plan with</span>
+            <span className="flex items-center gap-1.5 rounded-[0.3rem] bg-white p-1 px-1.5 pr-2 text-lg shadow-md sm:text-xl">
+                <span>
+                    <img className="h-5 w-5 sm:h-6 sm:w-6" src={geminiImg} alt="" />
+                </span>
+                <span className="font-gemini font-medium text-[#3186ff]">Gemini</span>
+            </span>
+        </div>
     );
 }
 
@@ -136,7 +153,6 @@ function InterviewHistory() {
                                 </p>
                                 <div className="flex gap-3">
                                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary transition-colors group-hover:bg-background">
-                                        {/*<HugeiconsIcon icon={ClipboardClockIcon} strokeWidth={2} />*/}
                                         <span className="font-semibold">{report.matchScore}</span>
                                     </div>
 
@@ -195,28 +211,14 @@ function JobDescription({
     );
 }
 
-function Profile({
-    file,
-    setFile,
-    selfDescription,
-    setSelfDescription,
-}: {
-    file: File | null;
-    setFile: React.Dispatch<React.SetStateAction<File | null>>;
-    selfDescription: string;
-    setSelfDescription: React.Dispatch<React.SetStateAction<string>>;
-}) {
+function Profile({ children }: { children: React.ReactNode }) {
     return (
         <div className="flex flex-1 flex-col lg:pl-6">
             <p className="mb-2 flex items-center gap-2">
                 <HugeiconsIcon strokeWidth={2} className="h-6 w-6" icon={Male02Icon} />
                 <span className="font-head text-lg">Your Profile</span>
             </p>
-            <ResumeUpload file={file} setFile={setFile} />
-            <SelfDescription
-                selfDescription={selfDescription}
-                setSelfDescription={setSelfDescription}
-            />
+            {children}
         </div>
     );
 }

@@ -50,13 +50,12 @@ const severityClasses: Record<TSkillGap["severity"], string> = {
 };
 
 export default function ReportView() {
-    // cmrrxybmp0000y8o7s0xniofz
     const params = useParams();
     const id = params.reportId;
     const query = useInterviewReportQuery(id!);
     const generateResumeMutation = useGenerateResumeMutation();
 
-    if (query.isLoading) {
+    if (query.isLoading || !query.data) {
         return <ViewLoader />;
     }
 
@@ -69,7 +68,8 @@ export default function ReportView() {
         return <ViewLoader />;
     }
 
-    const interviewReport = query.data!;
+    const interviewReport = query.data;
+    console.log(JSON.stringify(query.data));
 
     const goodMatch = interviewReport.matchScore >= 60;
 
@@ -143,7 +143,7 @@ export default function ReportView() {
                 <PreparationPlan plan={interviewReport.preparationPlan} />
 
                 <div className="flex w-full items-center justify-between px-6">
-                    <DeleteReport reportId={interviewReport.id} />
+                    <DeleteReportBtn reportId={interviewReport.id} />
                     <GenerateResumeBtn
                         generateResumeMutation={generateResumeMutation}
                         handleResumeAction={handleResumeAction}
@@ -154,7 +154,7 @@ export default function ReportView() {
     );
 }
 
-function DeleteReport({ reportId }: { reportId: string }) {
+function DeleteReportBtn({ reportId }: { reportId: string }) {
     const deleteReportMutation = useDeleteInterviewReportMutation();
 
     const handleDelete = async function () {
@@ -164,9 +164,9 @@ function DeleteReport({ reportId }: { reportId: string }) {
     return (
         <Dialog>
             <DialogTrigger>
-                <Button className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-red-400 text-white">
+                <span className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-red-400 text-white">
                     <HugeiconsIcon icon={Delete02Icon} className="size-6" />
-                </Button>
+                </span>
             </DialogTrigger>
             <DialogContent className="w-90 bg-primary/90">
                 <DialogHeader>
