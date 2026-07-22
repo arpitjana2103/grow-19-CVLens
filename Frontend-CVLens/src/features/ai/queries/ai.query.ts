@@ -98,10 +98,10 @@ export function useDeleteInterviewReportMutation() {
     return useMutation({
         mutationFn: deleteInterviewReportById,
         onMutate: function () {
-            toast.loading("Generating resume...", { id: "delete-resume", duration: 30 * 1000 });
+            toast.loading("Deleting Resume ...", { id: "delete-resume", duration: 30 * 1000 });
         },
         onSuccess: async function () {
-            toast.success("Resume generated successfully!", {
+            toast.success("Resume Deleted Successfully !", {
                 id: "delete-resume",
                 duration: 4000,
             });
@@ -116,7 +116,7 @@ export function useDeleteInterviewReportMutation() {
                 toast.error(errorData.message, { id: "delete-resume" });
             } else {
                 console.log(error);
-                toast.error("Failed to Generate Resume", { id: "delete-resume", duration: 4000 });
+                toast.error("Failed to Delete Resume", { id: "delete-resume", duration: 4000 });
             }
         },
     });

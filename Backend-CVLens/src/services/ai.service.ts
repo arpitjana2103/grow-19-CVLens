@@ -63,7 +63,24 @@ export const generateInterviewReport = async function ({
 };
 
 async function generatePdfFromHtml(htmlContent: string) {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+        headless: true,
+        args: [
+            // Required in containerized / non-root environments (Render, Docker, etc.)
+            "--no-sandbox",
+            "--disable-setuid-sandbox",
+
+            // CRITICAL for Render: /dev/shm is only 64MB on Render vs 2GB locally.
+            // Chrome uses /dev/shm by default for temp files — causes OOM crashes without this.
+            "--disable-dev-shm-usage",
+
+            // Reduces memory footprint — important on Render free tier (512MB RAM)
+            "--disable-gpu",
+            "--no-first-run",
+            "--no-zygote",
+            "--single-process",
+        ],
+    });
 
     try {
         const page = await browser.newPage();
