@@ -24,7 +24,7 @@ export const AuthProvider = function ({ children }: AuthProviderProps) {
         const TOAST_ID = "auth-toast-provider";
 
         if (query.isLoading || query.isFetching) {
-            toast.loading("Authenticating ...", { id: TOAST_ID, duration: 30 * 1000 });
+            toast.loading("Authenticating ...", { id: TOAST_ID, duration: 30 * 60 * 1000 });
         } else if (query.isSuccess) {
             if (query.data !== null) {
                 const username = query.data?.username;
