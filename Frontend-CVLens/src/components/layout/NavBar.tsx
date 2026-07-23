@@ -1,4 +1,4 @@
-import { LoginCircle02FreeIcons, LogoutCircle02Icon } from "@hugeicons/core-free-icons";
+import { GithubIcon, LoginCircle02FreeIcons, LogoutCircle02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Link, useLocation, useNavigate } from "react-router";
 
@@ -41,7 +41,7 @@ export default function NavBar({ className }: { className?: string }) {
                         </Link>
                     </div>
 
-                    <div className="flex gap-2">
+                    <div className="flex items-center gap-3">
                         {!isAuthenticated && isHomeRoute && (
                             <MyButton varient="holo" onClick={() => navigate("/login")}>
                                 <span>Login</span>
@@ -92,6 +92,14 @@ export default function NavBar({ className }: { className?: string }) {
                                 Get Started
                             </MyButton>
                         )}
+                        <a
+                            href="https://github.com/arpitjana2103/grow-19-CVLens"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="transition-opacity hover:opacity-80"
+                        >
+                            <HugeiconsIcon icon={GithubIcon} />
+                        </a>
                     </div>
                 </div>
             </Container>
